@@ -1,0 +1,128 @@
+\documentclass{scrartcl}
+\usepackage{polski}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{listings}
+\usepackage{amsmath}
+
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+
+\makeatletter
+\def\BState{\State\hskip-\ALG@thistlm}
+\makeatother
+
+\makeatletter
+\def\BState{\State\hskip-\ALG@thistlm}
+\makeatother
+
+
+\title{Dokumentacja wstępna}
+\subtitle{Implementacja i testowanie algorytmu ewolucji różnicowej, w którym jako pierwszy z 3 punktów stosowanych podczas mutacji, wybierana jest średnia punktów populacji. Metodę należy porównać z klasyczną wersją ewolucji różnicowej. Testy powinny zostać przeprowadzone na benchmarku CEC 2013}
+\date{\today}
+
+\author{
+  Michał Padzik\\
+  \texttt{padzikm@student.mini.pw.edu.pl}
+  \and
+  Albert Wolant\\
+  \texttt{wolanta@student.mini.pw.edu.pl}
+}
+
+\begin{document}
+
+\maketitle
+\pagenumbering{gobble}
+\newpage
+\pagenumbering{arabic}
+
+\section{Opis algorytmów}
+
+\subsection{Klasyczna ewolucja różnicowa}
+
+Poniżej zamieszczamy pseudokod klasycznego algorytmu ewolucji różnicowej, który zostanie zaimplementowany w celu porównania z algorytmem zmodyfikowanym:
+\vspace{5mm}
+
+\begin{algorithm}
+\caption{Klasyczny algorytm ewolucji różnicowej}\label{euclid}
+\begin{algorithmic}
+\Procedure{differential evolution}{}
+
+\State $P^0 \gets \{ P^0_1, P^0_2, ... , P^0_n\}$
+\State $H \gets P^0$
+\State $t \gets 0$
+
+\While{!stop} 
+\ForAll{$i  \in \{1 : n\}$}
+\State $P^t_j \gets select(P^t)$
+\vspace{1mm}
+\State $P^t_k, P^t_l \gets sample(P^t)$
+\vspace{1mm}
+\State $M^t_i \gets P^t_j + F * (P^t_k - P^t_j)$
+\vspace{1mm}
+\State $O^t_i \gets crossover(P^t_i, M^t_i)$
+\vspace{1mm}
+\State $H \gets H \cup \{O^t_i\}$
+\vspace{1mm}
+\State $P^{t+1}_i \gets tournament(P^t_i, O^t_i)$
+\vspace{1mm}
+\EndFor
+\State $t \gets t+1$
+\EndWhile
+
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+Operacja $tournament$ to wybór osobnika do kolejnej populacji, a zbiór $H$ jest zbiorem kandydatów do populacji. Jeśli przyjmiemy, że operacja $select$ jest losowym wyborem pary punktów z jednakowym prawdopodobieństwem, a operacja $crossover$ to krzyżowanie wymieniające, dwumianowe to przedstawiony powyżej algorytm nosi w literaturze oznaczenie $DE/rand/1/bin$ i jest najpopularniejszym wariantem algorytmu ewolucji różnicowej, dlatego zostanie użyty do porównań jako klasyczny przykład ewolucji różnicowej.
+
+\pagebreak
+\subsection{Zmodyfikowana ewolucja różnicowa}
+
+Proponowana modyfikacja algorytmu ewolucji różnicowej właściwie obejmuje tylko operację $select$. Zostanie ona zmieniona na operację wyliczania średniej z aktualnej populacji. Dodatkowo, ponieważ wartość średniej nie zmieni się dla kolejnych osobników w populacji może być obliczona tylko raz dla wszystkich. Poniżej przedstawiamy pseudokod zmodyfikowanego algorytmu:
+
+\vspace{5mm}
+
+\begin{algorithm}
+\caption{Klasyczny algorytm ewolucji różnicowej}\label{euclid}
+\begin{algorithmic}
+\Procedure{differential evolution}{}
+
+\State $P^0 \gets \{ P^0_1, P^0_2, ... , P^0_n\}$
+\State $H \gets P^0$
+\State $t \gets 0$
+
+\While{!stop} 
+\State $A \gets average(P^t)$
+\ForAll{$i  \in \{1 : n\}$}
+\vspace{1mm}
+\State $P^t_k, P^t_l \gets sample(P^t)$
+\vspace{1mm}
+\State $M^t_i \gets A + F * (P^t_k - P^t_j)$
+\vspace{1mm}
+\State $O^t_i \gets crossover(P^t_i, M^t_i)$
+\vspace{1mm}
+\State $H \gets H \cup \{O^t_i\}$
+\vspace{1mm}
+\State $P^{t+1}_i \gets tournament(P^t_i, O^t_i)$
+\vspace{1mm}
+\EndFor
+\State $t \gets t+1$
+\EndWhile
+
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+Operacja $average$ wyliczy średnią z populacji.
+
+\section{Opis eksperymentu}
+
+Eksperymenty będą polegały na porównaniu wyników działania algorytmów klasycznego i zmodyfikowanego, na benchmarku CEC-2013. Dodatkowo, jeśli implementacja będzie wystarczająco wydajna, porównane zostaną różne algorytmy liczenia średniej populacji, na przykład zwykła średnia i średnia ważona z wagami będącymi jakością punktów w populacji.
+
+\section{Podsumowanie}
+
+Dla oceny algorytmu zmodyfikowanego kluczowe będą wyniki eksperymentów. Przed ich wykonaniem można przewidywać, że zmiana metody mutacji wpłynie na zmniejszenie ruchliwości i rozproszenia populacji. Wniosek ten wnika z faktu, że po zmianie, wszystkie punkty w zbiorze kandydatów będą rozmieszczone koncentrycznie wokoło punktu średniego populacji i oddalone od niego nie bardziej, niż wynosi maksymalna różnica punktów populacji.
+
+
+\end{document}
