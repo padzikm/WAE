@@ -84,9 +84,9 @@ Proponowana modyfikacja algorytmu ewolucji różnicowej właściwie obejmuje tyl
 \vspace{5mm}
 
 \begin{algorithm}
-\caption{Klasyczny algorytm ewolucji różnicowej}\label{euclid}
+\caption{Zmodyfikowany algorytm ewolucji różnicowej}\label{euclid}
 \begin{algorithmic}
-\Procedure{differential evolution}{}
+\Procedure{modified differential evolution}{}
 
 \State $P^0 \gets \{ P^0_1, P^0_2, ... , P^0_n\}$
 \State $H \gets P^0$
@@ -119,6 +119,10 @@ Operacja $average$ wyliczy średnią z populacji.
 \section{Opis eksperymentu}
 
 Eksperymenty będą polegały na porównaniu wyników działania algorytmów klasycznego i zmodyfikowanego, na benchmarku CEC-2013. Dodatkowo, jeśli implementacja będzie wystarczająco wydajna, porównane zostaną różne algorytmy liczenia średniej populacji, na przykład zwykła średnia i średnia ważona z wagami będącymi jakością punktów w populacji.
+
+Dla każdej z metod wyliczania średniej oraz dla algorytmu niezmodyfikowanego każda z funkcji benchmarku CEC-2013 zostanie przetworzona k razy. Obliczone będą średnie wartości znalezionych optymalnych rozwiązań dla pewnych kroków czasowych. Pozwoli to wykreślić krzywe zbieżnoci algorytmów i praktycznie porównać ich działanie. Wartość k zostanie ustalona na etapie przygotowywania eksperymentów.
+
+Ponadto, jeśli wyniki będą wystarczająco jednoznaczne, używając metod testowania hipotez statystycznych zostanie udowodniona wyższość jednej z metod.
 
 \section{Podsumowanie}
 
