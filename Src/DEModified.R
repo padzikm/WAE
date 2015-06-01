@@ -1,0 +1,26 @@
+#Funkcja realizuj¹ca zmodyfikowany algorytm ewolucji ró¿nicowej
+#iterationsCount - liczba iteracji
+#populationSize - rozmiar populacji
+#benchmarkNumber - która funkcja z benchmarku CEC2013 jest analizowana
+#dimensionsCount - liczba wymiarów dla jakiej obliczamy funkcjê
+#middleResults - ile wyników poœrednich zwracamy, ¿eby narysowaæ póŸniej krzyw¹ zbie¿noœci
+#return - tablicê, która ma middleResults + 1 wierszy. Ka¿dy wiersz reprezentuje
+#         aktualnie najlepszy punkt populacji. Tablica ma dimensionsCount + 1 
+#         kolumn. W pierwszych kolumnach s¹ wspó³rzêdne punktu. W ostatniej wartoœæ
+#         funkcji celu. Ostatni wiersz to ostateczny wynik optymalizacji.
+
+
+deModified <- function(iterationsCount, populationSize, benchmarkNumber,
+                       dimensionsCount, middleResults)
+{
+  #¯eby wygodnie siê liczy³o CEC populacja mo¿e byæ macierz¹. Ka¿dy wiersz to
+  #jeden punkt populacji. Kolumny to kolejne wymiary.
+  population <- matrix(0, populationSize, dimensionsCount)
+  
+  #Tak siê oblicza wartoœæ funkcji celu. Pierwszy parametr to numer funkcji,
+  #drugi to macierz z punktami do wyznaczenia wartoœci funkcji celu.
+  #Zwracana wartoœæ to wektor z kolejnymi wartoœciami funkcji celu.
+  singleResult <- cec2013(benchmarkNumber, population)
+  
+  return(1)
+}
