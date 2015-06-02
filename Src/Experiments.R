@@ -1,6 +1,7 @@
 #Inicjalizacja œrodowiska
 source("DEStandard.R")
 source("DEModified.R")
+source("DEModified2.R")
 library(cec2013)
 
 
@@ -27,4 +28,6 @@ runExperiment <- function(iterationsCount, populationSize, benchmarkNumber,
   print(deModified(iterationsCount, populationSize, optimizedFunction,
                    dimensionsCount, middleResults))
   
+  print(deModified2(iterationsCount, populationSize, optimizedFunction,
+                   dimensionsCount, middleResults))
 }
