@@ -1,7 +1,7 @@
 #Funkcja realizuj¹ca zmodyfikowany algorytm ewolucji ró¿nicowej
 #iterationsCount - liczba iteracji
 #populationSize - rozmiar populacji
-#benchmarkNumber - która funkcja z benchmarku CEC2013 jest analizowana
+#optimizedFunction - funkcja celu
 #dimensionsCount - liczba wymiarów dla jakiej obliczamy funkcjê
 #middleResults - ile wyników poœrednich zwracamy, ¿eby narysowaæ póŸniej krzyw¹ zbie¿noœci
 #return - tablicê, która ma middleResults + 1 wierszy. Ka¿dy wiersz reprezentuje
@@ -10,18 +10,18 @@
 #         funkcji celu. Ostatni wiersz to ostateczny wynik optymalizacji.
 
 
-deModified <- function(iterationsCount, populationSize, benchmarkNumber,
+deModified <- function(iterationsCount, populationSize, optimizedFunction,
                        dimensionsCount, middleResults)
 {
   Ff <- 0.8
   Cr <- 0.9
   
   population <- matrix(runif(populationSize*dimensionsCount, -100, 100), populationSize, dimensionsCount)
-  populationResults <- cec2013(benchmarkNumber, population)
+  populationResults <- optimizedFunction(population)
   partialResults <- NULL
   freq <- floor(iterationsCount / middleResults)
   iteration <- 1
-  
+
   while(iteration <= iterationsCount)
   {
     avg <- sum(populationResults) / populationSize
@@ -50,7 +50,7 @@ deModified <- function(iterationsCount, populationSize, benchmarkNumber,
         }
       }
       
-      result <- cec2013(benchmarkNumber, O)
+      result <- optimizedFunction(O)
       
       if(result < populationResults[i])
       {
