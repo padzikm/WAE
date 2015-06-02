@@ -19,10 +19,12 @@ library(cec2013)
 runExperiment <- function(iterationsCount, populationSize, benchmarkNumber,
                           dimensionsCount, middleResults)
 {
-  print(deStandard(iterationsCount, populationSize, benchmarkNumber,
+  optimizedFunction <- function(x) {return(cec2013(benchmarkNumber, x))}
+  
+  print(deStandard(iterationsCount, populationSize, optimizedFunction,
                    dimensionsCount, middleResults))
   
-  print(deModified(iterationsCount, populationSize, benchmarkNumber,
+  print(deModified(iterationsCount, populationSize, optimizedFunction,
                    dimensionsCount, middleResults))
   
 }
