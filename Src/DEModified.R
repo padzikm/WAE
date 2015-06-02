@@ -24,7 +24,13 @@ deModified <- function(iterationsCount, populationSize, optimizedFunction,
 
   while(iteration <= iterationsCount)
   {
-    avg <- sum(populationResults) / populationSize
+  
+    avg <- NULL
+    
+    for(k in 1:dimensionsCount)
+    {
+      avg[k] <- sum(population[,k]) / populationSize
+    }
     
     newPopulation <- NULL
     
