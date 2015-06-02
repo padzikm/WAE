@@ -3,7 +3,7 @@
 #populationSize - rozmiar populacji
 #benchmarkNumber - która funkcja z benchmarku CEC2013 jest analizowana
 #dimensionsCount - liczba wymiarów dla jakiej obliczamy funkcjê
-#middleResults - ile wyników poœrednich zwracamy, ¿eby narysowaæ póŸniej krzyw¹ zbie¿noœci
+#middleResults - ile wyników poœrednich zwracamy, ¿eby narysowaæ póŸniej krzyw¹ zbie¿noœc?
 #return - tablicê, która ma middleResults + 1 wierszy. Ka¿dy wiersz reprezentuje
 #         aktualnie najlepszy punkt populacji. Tablica ma dimensionsCount + 1 
 #         kolumn. W pierwszych kolumnach s¹ wspó³rzêdne punktu. W ostatniej wartoœæ
@@ -13,14 +13,69 @@
 deStandard <- function(iterationsCount, populationSize, benchmarkNumber,
                        dimensionsCount, middleResults)
 {
-  #¯eby wygodnie siê liczy³o CEC populacja mo¿e byæ macierz¹. Ka¿dy wiersz to
-  #jeden punkt populacji. Kolumny to kolejne wymiary.
-  population <- matrix(0, populationSize, dimensionsCount)
+  Ff <- 0.8
+  Cr <- 0.9
   
-  #Tak siê oblicza wartoœæ funkcji celu. Pierwszy parametr to numer funkcji,
-  #drugi to macierz z punktami do wyznaczenia wartoœci funkcji celu.
-  #Zwracana wartoœæ to wektor z kolejnymi wartoœciami funkcji celu.
-  singleResult <- cec2013(benchmarkNumber, population)
+  population <- matrix(runif(populationSize*dimensionsCount, -100, 100), populationSize, dimensionsCount)
+  populationResults <- cec2013(benchmarkNumber, population)
+  partialResults <- NULL
+  freq <- floor(iterationsCount / middleResults)
+  iteration <- 1
   
-  return(0)
+  while(iteration <= iterationsCount)
+  {
+    newPopulation <- NULL
+    
+    for(i in 1:populationSize)
+    {
+      P <- sample(c(1:populationSize), 3)
+      
+      M <- population[P[1],] + Ff*(population[P[2],] - population[P[3],])
+      
+      O <- NULL
+      
+      for(j in 1:dimensionsCount)
+      {
+        a <- runif(1)
+        
+        if(a < Cr)
+        {
+          O[j] = M[j]
+        }
+        else
+        {
+          O[j] = population[i,j]
+        }
+      }
+      
+      result <- cec2013(benchmarkNumber, O)
+      
+      if(result < populationResults[i])
+      {
+        populationResults[i] <- result
+        newPopulation <- rbind(newPopulation, O)
+      }
+      else
+      {
+        newPopulation <- rbind(newPopulation, population[i,])
+      }
+    }
+    
+    population <- newPopulation
+    
+    currentBest <- which.min(populationResults)
+    
+    if(iteration %% freq == 0)
+    {
+      partialResults <- rbind(partialResults, c(population[currentBest,], populationResults[currentBest]))
+    }
+    
+    iteration <- iteration + 1
+  }
+  
+  currentBest <- which.min(populationResults)
+  
+  partialResults <- rbind(partialResults, c(population[currentBest,], populationResults[currentBest]))
+  
+  return (partialResults);
 }
