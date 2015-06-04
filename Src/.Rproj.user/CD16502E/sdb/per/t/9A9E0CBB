@@ -1,0 +1,16 @@
+{
+    "contents" : "#Funkcja realizuj?ca zmodyfikowany algorytm ewolucji r??nicowej ze ?redni? wa?on?\n\ndeModified2 <- function(populationSize, optimizedFunction, dimensionsCount)\n{\n  Ff <- 0.8\n  Cr <- 0.9\n  MaxFES <- 10000 * dimensionsCount\n  FES <- 0\n  \n  population <- matrix(runif(populationSize*dimensionsCount, -100, 100), populationSize, dimensionsCount)\n  populationResults <- optimizedFunction(population)\n  FES <- FES + populationSize\n  \n  while(FES < MaxFES && min(populationResults) > 10e-8)\n  {\n    \n    avg <- NULL\n    resultSum <- sum(populationResults)\n    \n    for(k in 1:dimensionsCount)\n    {\n      weightedResults <- population[,k] * populationResults\n      avg[k] <- sum(weightedResults) / resultSum\n    }\n    \n    newPopulation <- NULL\n    \n    for(i in 1:populationSize)\n    {\n      P <- sample(c(1:populationSize), 2)\n      \n      M <- avg + Ff*(population[P[1],] - population[P[2],])\n      \n      O <- NULL\n      \n      for(j in 1:dimensionsCount)\n      {\n        a <- runif(1)\n        \n        if(a < Cr)\n        {\n          O[j] = M[j]\n        }\n        else\n        {\n          O[j] = population[i,j]\n        }\n      }\n      \n      result <- optimizedFunction(O)\n      FES <- FES + 1\n      \n      if(result < populationResults[i])\n      {\n        populationResults[i] <- result\n        newPopulation <- rbind(newPopulation, O)\n      }\n      else\n      {\n        newPopulation <- rbind(newPopulation, population[i,])\n      }\n    }\n    \n    population <- newPopulation\n    \n  }\n  \n  return (round(min(populationResults), 9))\n}",
+    "created" : 1433455126740.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "205003317",
+    "id" : "9A9E0CBB",
+    "lastKnownWriteTime" : 1433455996,
+    "path" : "C:/Users/Albert/OneDrive/Studia/Semestr8/WAE/Projekt/Src/DEModified2.R",
+    "project_path" : "DEModified2.R",
+    "properties" : {
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}

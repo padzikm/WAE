@@ -1,28 +1,17 @@
-#Funkcja realizuj¹ca standardowy algorytm ewolucji ró¿nicowej
-#iterationsCount - liczba iteracji
-#populationSize - rozmiar populacji
-#optimizedFunction - funkcja celu
-#dimensionsCount - liczba wymiarów dla jakiej obliczamy funkcjê
-#middleResults - ile wyników poœrednich zwracamy, ¿eby narysowaæ póŸniej krzyw¹ zbie¿noœc?
-#return - tablicê, która ma middleResults + 1 wierszy. Ka¿dy wiersz reprezentuje
-#         aktualnie najlepszy punkt populacji. Tablica ma dimensionsCount + 1 
-#         kolumn. W pierwszych kolumnach s¹ wspó³rzêdne punktu. W ostatniej wartoœæ
-#         funkcji celu. Ostatni wiersz to ostateczny wynik optymalizacji.
+#Funkcja realizuj?ca standardowy algorytm ewolucji r??nicowej
 
-
-deStandard <- function(iterationsCount, populationSize, optimizedFunction,
-                          dimensionsCount, middleResults)
+deStandard <- function(populationSize, optimizedFunction, dimensionsCount)
 {
   Ff <- 0.8
   Cr <- 0.9
+  MaxFES <- 10000 * dimensionsCount
+  FES <- 0
   
   population <- matrix(runif(populationSize*dimensionsCount, -100, 100), populationSize, dimensionsCount)
   populationResults <- optimizedFunction(population)
-  partialResults <- NULL
-  freq <- floor(iterationsCount / middleResults)
-  iteration <- 1
+  FES <- FES + populationSize
   
-  while(iteration <= iterationsCount)
+  while(FES < MaxFES && min(populationResults) > 10e-8)
   {
     newPopulation <- NULL
     
@@ -49,6 +38,7 @@ deStandard <- function(iterationsCount, populationSize, optimizedFunction,
       }
       
       result <- optimizedFunction(O)
+      FES <- FES + 1
       
       if(result < populationResults[i])
       {
@@ -62,20 +52,7 @@ deStandard <- function(iterationsCount, populationSize, optimizedFunction,
     }
     
     population <- newPopulation
-    
-    currentBest <- which.min(populationResults)
-    
-    if(iteration %% freq == 0)
-    {
-      partialResults <- rbind(partialResults, c(population[currentBest,], populationResults[currentBest]))
-    }
-    
-    iteration <- iteration + 1
   }
   
-  currentBest <- which.min(populationResults)
-  
-  partialResults <- rbind(partialResults, c(population[currentBest,], populationResults[currentBest]))
-  
-  return (partialResults);
+  return (round(min(populationResults), 9))
 }

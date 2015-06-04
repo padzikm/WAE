@@ -1,0 +1,16 @@
+{
+    "contents" : "#Inicjalizacja ?rodowiska\nsource(\"DEStandard.R\")\nsource(\"DEModified.R\")\nsource(\"DEModified2.R\")\nlibrary(cec2013)\n\n#Warto?ci minimalne dla funkcji benchmarku CEC2013\nOPTIMALS = c(seq(-1400, -100, 100), seq(100, 1400, 100))\n\n\n\nbuildResultRow <- function(populationSize, dimensionsCount, attemptsCount, benchmarkNumber, optimizingFunction)\n{\n  rawResults = seq(1, attemptsCount)\n  \n  optimizedFunctionError <- function(x) {return(abs(cec2013(benchmarkNumber, x) - OPTIMALS[benchmarkNumber]))}\n  \n  for(i in 1 : attemptsCount)\n    rawResults[i] = optimizingFunction(populationSize, optimizedFunctionError, dimensionsCount)\n  \n  resultRow = c(benchmarkNumber, min(rawResults), max(rawResults), mean(rawResults), median(rawResults), sd(rawResults))\n  \n  return(resultRow)\n  \n}\n\nbuildResultsTable <- function(populationSize, dimensionsCount, attemptsCount, optimizingFunction, methodName, fromFunc, toFunc)\n{\n  resultsTable <- c(\"Func\", \"Best\", \"Worst\", \"Mean\", \"Median\", \"Standard deviation\")\n  \n  print(methodName)\n  print(\"Starting...\")\n  \n  for(i in fromFunc : toFunc)\n  {\n    resultsTable <- rbind(resultsTable, buildResultRow(populationSize, dimensionsCount, attemptsCount, i, optimizingFunction))\n    print(paste(c(i - fromFunc + 1, \"/\", toFunc - fromFunc + 1), collapse = \" \"))\n  }\n  \n  print(\"Finished...\")\n  \n  fileName <- paste(c(methodName, \"from\", fromFunc, \"to\", toFunc, \".txt\"), collapse = \"_\")\n  write(t(resultsTable), file = fileName, ncolumns = 6, append = FALSE, sep = \"\\t\")\n  print(resultsTable)\n\n}",
+    "created" : 1433444124067.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1737236200",
+    "id" : "CC4EF404",
+    "lastKnownWriteTime" : 1433455955,
+    "path" : "C:/Users/Albert/OneDrive/Studia/Semestr8/WAE/Projekt/Src/Experiments.R",
+    "project_path" : "Experiments.R",
+    "properties" : {
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}

@@ -1,33 +1,46 @@
-#Inicjalizacja œrodowiska
+#Inicjalizacja ?rodowiska
 source("DEStandard.R")
 source("DEModified.R")
 source("DEModified2.R")
 library(cec2013)
 
-
-#Funkcja realizuj¹ca pojedynczy eksperyment
-#iterationsCount - liczba iteracji
-#populationSize - rozmiar populacji
-#benchmarkNumber - która funkcja z benchmarku CEC2013 jest analizowana
-#dimensionsCount - liczba wymiarów dla jakiej obliczamy funkcjê
-#middleResults - ile wyników poœrednich zwracamy, ¿eby narysowaæ póŸniej krzyw¹ zbie¿noœci
-#return - tablicê, która ma middleResults + 1 wierszy. Ka¿dy wiersz reprezentuje
-#         aktualnie najlepszy punkt populacji. Tablica ma dimensionsCount + 1 
-#         kolumn. W pierwszych kolumnach s¹ wspó³rzêdne punktu. W ostatniej wartoœæ
-#         funkcji celu. Ostatni wiersz to ostateczny wynik optymalizacji.
+#Warto?ci minimalne dla funkcji benchmarku CEC2013
+OPTIMALS = c(seq(-1400, -100, 100), seq(100, 1400, 100))
 
 
-runExperiment <- function(iterationsCount, populationSize, benchmarkNumber,
-                          dimensionsCount, middleResults)
+
+buildResultRow <- function(populationSize, dimensionsCount, attemptsCount, benchmarkNumber, optimizingFunction)
 {
-  optimizedFunction <- function(x) {return(cec2013(benchmarkNumber, x))}
+  rawResults = seq(1, attemptsCount)
   
-  print(deStandard(iterationsCount, populationSize, optimizedFunction,
-                   dimensionsCount, middleResults))
+  optimizedFunctionError <- function(x) {return(abs(cec2013(benchmarkNumber, x) - OPTIMALS[benchmarkNumber]))}
   
-  print(deModified(iterationsCount, populationSize, optimizedFunction,
-                   dimensionsCount, middleResults))
+  for(i in 1 : attemptsCount)
+    rawResults[i] = optimizingFunction(populationSize, optimizedFunctionError, dimensionsCount)
   
-  print(deModified2(iterationsCount, populationSize, optimizedFunction,
-                   dimensionsCount, middleResults))
+  resultRow = c(benchmarkNumber, min(rawResults), max(rawResults), mean(rawResults), median(rawResults), sd(rawResults))
+  
+  return(resultRow)
+  
+}
+
+buildResultsTable <- function(populationSize, dimensionsCount, attemptsCount, optimizingFunction, methodName, fromFunc, toFunc)
+{
+  resultsTable <- c("Func", "Best", "Worst", "Mean", "Median", "Standard deviation")
+  
+  print(methodName)
+  print("Starting...")
+  
+  for(i in fromFunc : toFunc)
+  {
+    resultsTable <- rbind(resultsTable, buildResultRow(populationSize, dimensionsCount, attemptsCount, i, optimizingFunction))
+    print(paste(c(i - fromFunc + 1, "/", toFunc - fromFunc + 1), collapse = " "))
+  }
+  
+  print("Finished...")
+  
+  fileName <- paste(c(methodName, "from", fromFunc, "to", toFunc, ".txt"), collapse = "_")
+  write(t(resultsTable), file = fileName, ncolumns = 6, append = FALSE, sep = "\t")
+  print(resultsTable)
+
 }
