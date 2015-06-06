@@ -4,7 +4,7 @@ deModified2 <- function(populationSize, optimizedFunction, dimensionsCount)
 {
   Ff <- 0.8
   Cr <- 0.9
-  MaxFES <- 10000 * dimensionsCount
+  MaxFES <- 2500 * dimensionsCount
   FES <- 0
   
   population <- matrix(runif(populationSize*dimensionsCount, -100, 100), populationSize, dimensionsCount)
