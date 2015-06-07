@@ -1,0 +1,2 @@
+Func	Best	Worst	Mean	Median	Standard deviation
+21	400.193867219	400.193867219	400.193867219	400.193867219	0
