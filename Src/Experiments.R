@@ -2,6 +2,10 @@
 source("DEStandard.R")
 source("DEModified.R")
 source("DEModified2.R")
+
+source("DEMOdified2Chart.R")
+source("DEModifiedChart.R")
+source("DEStandardChart.R")
 library(cec2013)
 
 #Warto?ci minimalne dla funkcji benchmarku CEC2013
@@ -43,4 +47,18 @@ buildResultsTable <- function(populationSize, dimensionsCount, attemptsCount, op
   write(t(resultsTable), file = fileName, ncolumns = 6, append = FALSE, sep = "\t")
   print(resultsTable)
 
+}
+
+buildChart <- function(populationSize, dimensionsCount, methodName, func, iterations, optimizingFunction)
+{
+  print(methodName)
+  
+  optimizedFunctionError <- function(x) {return(abs(cec2013(func, x) - OPTIMALS[func]))}
+  
+  chart <- optimizingFunction(populationSize, optimizedFunctionError, dimensionsCount, iterations)
+  
+  #print(chart)
+  fileName <- paste(c(methodName, "func", func, ".txt"), collapse = "_")
+  write(t(chart), file = fileName, ncolumns = 4, append = FALSE, sep = "\t")
+  
 }
